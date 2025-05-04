@@ -1,0 +1,35 @@
+# dependencies
+node_modules/
+
+# build
+dist/
+
+# environment variables
+.env
+
+# IDEs and editors
+.vscode/
+.DS_Store
+
+# .NET build folders
+bin/
+obj/
+
+# .NET user-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio folder
+.vs/
+
+# .NET build outputs
+*.pdb
+*.dll
+*.exe
+*.cache
+*.log
+
+# ASP.NET Core environment settings
+appsettings.*.json
