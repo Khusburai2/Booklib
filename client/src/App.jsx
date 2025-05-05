@@ -1,22 +1,17 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import LoginForm from "./components/auth/LoginForm";
-import RegisterForm from "./components/auth/RegisterForm";
-import Dashboard from "./pages/Dashboard";
-import Home from "./pages/Home";
-import "./App.css";
+import React from 'react'
+import './index.css' // Ensure this import is present for Tailwind CSS
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/register" element={<RegisterForm />} />
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-      </Routes>
-    </BrowserRouter>
-  );
+    <div className="min-h-screen bg-gray-100 p-8">
+      <h1 className="text-3xl font-bold text-blue-600 mb-4">
+        Welcome to React + Vite + Tailwind
+      </h1>
+      <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+        Click Me
+      </button>
+    </div>
+  )
 }
 
-export default App;
+export default App
