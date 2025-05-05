@@ -41,6 +41,12 @@ namespace Booklib.Controllers
             [FromQuery] bool? onSale,
             [FromQuery] decimal? minPrice,
             [FromQuery] decimal? maxPrice,
+            [FromQuery] string? language,
+            [FromQuery] string? format,
+            [FromQuery] string? publisher,
+            [FromQuery] int? minRating,
+            [FromQuery] string? sortBy = "title", // Default sort by title
+            [FromQuery] string? sortOrder = "asc", // Default ascending order
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10)
         {
@@ -51,7 +57,10 @@ namespace Booklib.Controllers
                 query = query.Where(b => b.Genre == genre);
 
             if (!string.IsNullOrEmpty(search))
-                query = query.Where(b => b.Title.Contains(search) || b.Description.Contains(search));
+                query = query.Where(b => 
+                    b.Title.Contains(search) || 
+                    b.Description.Contains(search) ||
+                    b.ISBN.Contains(search));
 
             if (!string.IsNullOrEmpty(author))
                 query = query.Where(b => b.Author.Contains(author));
@@ -65,10 +74,46 @@ namespace Booklib.Controllers
             if (maxPrice.HasValue)
                 query = query.Where(b => b.Price <= maxPrice.Value);
 
+            if (!string.IsNullOrEmpty(language))
+                query = query.Where(b => b.Language == language);
+
+            if (!string.IsNullOrEmpty(format))
+                query = query.Where(b => b.Format == format);
+
+            if (!string.IsNullOrEmpty(publisher))
+                query = query.Where(b => b.Publisher == publisher);
+
+            if (minRating.HasValue)
+            {
+                // Assuming you'll add ratings later
+                // query = query.Where(b => b.AverageRating >= minRating.Value);
+            }
+
+            // Apply sorting
+            query = sortBy?.ToLower() switch
+            {
+                "title" => sortOrder == "desc" 
+                    ? query.OrderByDescending(b => b.Title)
+                    : query.OrderBy(b => b.Title),
+                "price" => sortOrder == "desc" 
+                    ? query.OrderByDescending(b => b.Price)
+                    : query.OrderBy(b => b.Price),
+                "year" => sortOrder == "desc" 
+                    ? query.OrderByDescending(b => b.YearPublished)
+                    : query.OrderBy(b => b.YearPublished),
+                "dateadded" => sortOrder == "desc" 
+                    ? query.OrderByDescending(b => b.AddedDate)
+                    : query.OrderBy(b => b.AddedDate),
+                _ => query.OrderBy(b => b.Title) // Default sort
+            };
+
             var totalCount = query.Count();
-            var books = query.Skip((page - 1) * pageSize)
-                           .Take(pageSize)
-                           .ToList();
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            var books = query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
             if (books.Count == 0)
                 return NotFound("No books match the criteria");
@@ -78,6 +123,9 @@ namespace Booklib.Controllers
                 TotalCount = totalCount,
                 Page = page,
                 PageSize = pageSize,
+                TotalPages = totalPages,
+                HasPreviousPage = page > 1,
+                HasNextPage = page < totalPages,
                 Books = books.Select(book => MapToResponseDTO(book)).ToList()
             };
 

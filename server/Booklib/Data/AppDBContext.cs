@@ -13,6 +13,9 @@ namespace Booklib.Data
          public DbSet<User> User { get; set; }
 
          public DbSet<Book> Books { get; set; }
+
+        public DbSet<Announcement> Announcements { get; set; }
+        public DbSet<Discount> Discounts{ get; set; }
     
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
