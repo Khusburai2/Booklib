@@ -5,7 +5,7 @@ import RegisterForm from "./components/auth/RegisterForm";
 import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import "./App.css";
-
+import BookAdmin from './components/admin/AdminPage' 
 
 function App() {
   return (
@@ -15,6 +15,10 @@ function App() {
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/bookadmin" element={<BookAdmin />} />
+
+
+
       </Routes>
     </BrowserRouter>
   );
